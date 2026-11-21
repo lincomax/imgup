@@ -169,6 +169,7 @@ const currentService = () => SERVICES[store.get(K.service)] ? store.get(K.servic
 const svcName = e => SERVICES[(e && e.service) || 'imgbb'];
 const SHARED_CACHE = 'imgup-shared';
 const DEFAULT_KEY = '31964e60acd3f8a4b2a86937bb198abc';
+const DEFAULT_FKEY = '6d207e02198a847aa98d0a2a901485a5';   // Freeimage.host
 
 const store = {
   get(k, d=''){ try { return localStorage.getItem(k) ?? d } catch { return d } },
@@ -195,7 +196,7 @@ function openSettings(open){
   if (open){
     $('#service').value = currentService();
     $('#key').value = store.get(K.key) || DEFAULT_KEY; showKeyStatus(); $('#acctname').value = acctNameFor(keyTag());
-    $('#fkey').value = store.get(K.fkey);
+    $('#fkey').value = store.get(K.fkey) || DEFAULT_FKEY;
     $('#linktype').value = store.get(K.link,'url'); $('#exp').value = store.get(K.exp,'0');
     showServiceFields();
   }
@@ -474,7 +475,7 @@ function upload(blob, name){
 }
 
 async function uploadFreeimage(blob){
-  const key = store.get(K.fkey);
+  const key = store.get(K.fkey) || DEFAULT_FKEY;
   if (!key) { const e = new Error('Add your Freeimage.host API key in Settings, then this will upload.'); e.needsKey = true; throw e; }
   const dataUrl = await blobToDataURL(blob);
   const body = new URLSearchParams();
